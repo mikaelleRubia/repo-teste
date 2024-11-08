@@ -1,0 +1,35 @@
+.card-profile {
+  padding: 5px 0;
+}
+
+h4, p, span {
+  margin: 0;
+}
+
+p {
+  color: #909090;
+}
+
+span {
+  color: #202020;
+  letter-spacing: 0.5px;
+}
+
+.info-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.info-card p,
+.info-card span {
+  font-size: 11px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.info-data {
+  margin: 5px 0;
+}

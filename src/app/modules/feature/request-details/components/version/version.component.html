@@ -1,0 +1,26 @@
+<div class="d-flex flex-column justify-content-between">
+  <div>
+    <p class="text-exo fw-bold">Artes Desenvolvidas</p>
+  </div>
+  <div class="d-flex gap-5 justify-content-between">
+    <div class="d-flex gap-5">
+      <p *ngIf="versions?.length == 0; else hasVersions" class="small-text text-exo ">Ainda não há versões
+        disponibilizadas para este projeto!</p>
+      <ng-template #hasVersions>
+        <div *ngFor="let version of versions" class="pb-4 border-bottom">
+          <button type="button" class="btn btn-sm"
+          [ngClass]="{
+            'btn-outline-secondary': versionStatus(version) == open,
+            'btn-outline-danger': versionStatus(version) == reject,
+            'btn-success': versionStatus(version) == approve,
+          }"
+          (click)="showVersion(version)">Versão #{{
+            version.versionNumber }} </button>
+        </div>
+      </ng-template>
+    </div>
+    <div *ngIf="" class="d-flex h-75">
+      <button class="btn btn-outline-primary shadow-custom btn-sm" (click)="showNewVersion()">Inserir Nova Arte</button>
+    </div>
+  </div>
+</div>
