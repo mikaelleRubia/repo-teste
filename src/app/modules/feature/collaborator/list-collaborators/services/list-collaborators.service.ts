@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ListCollaboratorsService {
-  private apiUrl = 'http://localhost:8080/api/v1/employees/allCollaborators';
+  private apiUrl = 'https://sistema-grupo-brasileiro-backend.onrender.com/api/v1/employees/allCollaborators';
 
   constructor(private http: HttpClient) { }
 

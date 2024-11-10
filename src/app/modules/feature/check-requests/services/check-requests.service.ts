@@ -8,7 +8,7 @@ import { CardsAttributes } from '../interfaces/cards-attributes';
 })
 export class CheckRequestsService {
 
-  private apiUrl = 'http://localhost:8080/api/v1/projects';
+  private apiUrl = 'https://sistema-grupo-brasileiro-backend.onrender.com/api/v1/projects';
 
   constructor(private http: HttpClient) { }
 

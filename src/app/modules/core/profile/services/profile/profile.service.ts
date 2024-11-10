@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class ProfileService {
-  private readonly apiUrl = 'http://localhost:8080/api/v1/profile'; 
+  private readonly apiUrl = 'https://sistema-grupo-brasileiro-backend.onrender.com/api/v1/profile'; 
 
   constructor(private httpClient: HttpClient) {}
 
