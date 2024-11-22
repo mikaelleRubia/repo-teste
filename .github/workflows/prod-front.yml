@@ -1,0 +1,42 @@
+name: Build and Deploy Angular App
+
+on:
+    push:
+        branches: [deploy-cepedi-develop]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '18.x'
+
+            - name: Install dependencies
+              run: npm install
+              working-directory: frontend 
+
+            - name: Build Angular app
+              run: npm run build
+              working-directory: frontend 
+
+            - name: Build Docker image
+              run: |
+                sudo docker build -t mikaelle2rubia/frontend-grupo-brasileiro .
+              working-directory: ./frontend 
+
+    deploy:
+        needs: build
+        runs-on: self-hosted
+        steps:
+            - name: Remove existing container
+              run: docker rm -f grupobrafront || true
+
+            - name: Run Docker container
+              run: docker run -d -p 4200:80 --name grupobrafront --network networksisbrasileiro mikaelle2rubia/frontend-grupo-brasileiro
+
