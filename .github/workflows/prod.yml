@@ -23,12 +23,11 @@ jobs:
 
             - name: Build Angular app
               run: npm run build
-              working-directory: frontend 
+
 
             - name: Build Docker image
-              run: |
-                sudo docker build -t mikaelle2rubia/frontend-grupo-brasileiro .
-              working-directory: ./frontend 
+              run: sudo docker build -t mikaelle2rubia/frontend-grupo-brasileiro .
+
 
     deploy:
         needs: build
