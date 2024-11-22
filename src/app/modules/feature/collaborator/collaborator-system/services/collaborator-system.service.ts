@@ -15,7 +15,7 @@ interface Collaborator {
   providedIn: 'root'
 })
 export class CollaboratorSystemService {
-  private apiUrl = 'https://sistema-grupo-brasileiro-backend.onrender.com/collaborators';
+  private apiUrl = 'http://localhost:8080/collaborators';
 
   constructor(private http: HttpClient) {}
 

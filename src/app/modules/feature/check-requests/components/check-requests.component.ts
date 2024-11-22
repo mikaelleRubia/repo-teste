@@ -42,10 +42,8 @@ export class CheckRequestsComponent implements OnInit {
   }
 
   getProjects(): void {
-    console.log("Chamando API para buscar projetos...");
     this.checkRequestServices.getProjects().subscribe({
       next: (response) => {
-        console.log("Resposta da API:", response);
         this.allProjects = response;
         this.projectsMapper(this.allProjects);
       },
@@ -57,37 +55,37 @@ export class CheckRequestsComponent implements OnInit {
   }
 
   private projectsMapper(allProjects: CardsAttributes[]): void {
-    this.toDoCards = allProjects.filter(project => project.status === 'TO_DO');
-    this.inProgressCards = allProjects.filter(project => project.status === 'IN_PROGRESS');
-    this.awaitingApprovalCards = allProjects.filter(project => project.status === 'WAITING_APPROVAL');
-    this.approvedCards = allProjects.filter(project => project.status === 'APPROVED');
-    this.inProductionCards = allProjects.filter(project => project.status === 'IN_PRODUCTION');
-    this.completedCards = allProjects.filter(project => project.status === 'COMPLETED');
-    this.standByCards = allProjects.filter(project => project.status === 'STAND_BY');
+    this.toDoCards = allProjects.filter(project => project.status === 'TO_DO').map(project => ({ ...project, isTruncated: true }));
+    this.inProgressCards = allProjects.filter(project => project.status === 'IN_PROGRESS').map(project => ({ ...project, isTruncated: true }));
+    this.awaitingApprovalCards = allProjects.filter(project => project.status === 'WAITING_APPROVAL').map(project => ({ ...project, isTruncated: true }));
+    this.approvedCards = allProjects.filter(project => project.status === 'APPROVED').map(project => ({ ...project, isTruncated: true }));
+    this.inProductionCards = allProjects.filter(project => project.status === 'IN_PRODUCTION').map(project => ({ ...project, isTruncated: true }));
+    this.completedCards = allProjects.filter(project => project.status === 'COMPLETED').map(project => ({ ...project, isTruncated: true }));
+    this.standByCards = allProjects.filter(project => project.status === 'STAND_BY').map(project => ({ ...project, isTruncated: true }));
   }
 
   isTruncated: boolean = true;
 
-  toggleTruncate() {
-    this.isTruncated = !this.isTruncated;
+  toggleTruncate(item: CardsAttributes): void {
+    item.isTruncated = !item.isTruncated;
   }
 
-  showCollaboratorName = false;
-  showClientName = false;
+  // showCollaboratorName = false;
+  // showClientName = false;
 
-  toggleTooltip(type: string) {
-    if (type === 'collaborator') {
-      this.showCollaboratorName = !this.showCollaboratorName;
-      this.showClientName = false;
-    } else if (type === 'client') {
-      this.showClientName = !this.showClientName;
-      this.showCollaboratorName = false;
-    }
-  }
+  // toggleTooltip(type: string) {
+  //   if (type === 'collaborator') {
+  //     this.showCollaboratorName = !this.showCollaboratorName;
+  //     this.showClientName = false;
+  //   } else if (type === 'client') {
+  //     this.showClientName = !this.showClientName;
+  //     this.showCollaboratorName = false;
+  //   }
+  // }
 
   deadline: Date = new Date;
 
   goToDetails(id: string) {
-    this.router.navigate(['/detalhes-solicitacao'], { state: {id: id} });
+    this.router.navigate(['/detalhes-solicitacao'], { state: { id: id } });
   }
 }

@@ -55,9 +55,9 @@ const routes: Routes = [
     component: MainProfileComponent,
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import(
-        './modules/core/profile/components/main-profile/profile-routing.module'
-      ).then((m) => m.ProfileRoutingModule),
+      import('./modules/core/profile/components/main-profile/profile-routing.module').then(
+        (m) => m.ProfileRoutingModule
+      ),
   },
   {
     path: 'meus-dados',
@@ -89,6 +89,11 @@ const routes: Routes = [
   {
     path: 'placa-de-sinalizacao',
     redirectTo: 'nova-solicitacao/placa-de-sinalizacao',
+    pathMatch: 'full'
+  },
+  {
+    path: 'adesivos',
+    redirectTo: 'nova-solicitacao/adesivos',
     pathMatch: 'full'
   },
   {

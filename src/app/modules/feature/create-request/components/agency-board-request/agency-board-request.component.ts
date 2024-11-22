@@ -10,6 +10,7 @@ import { I_Agency_Board_Data } from '../../../../shared/interfaces/briefing/agen
 import { I_Company_Briefing_Form_Data } from '../../../../shared/interfaces/company/form/company-briefing-form';
 import { I_Agency_Board_Routes } from '../../../../shared/interfaces/briefing/agency-board/form/agency-board-routes-form';
 import { I_Agency_Board_Others_Routes } from '../../../../shared/interfaces/briefing/agency-board/form/agency-board-others-routes-form';
+import { Router } from '@angular/router';
 
 enum Cities {
   'SÃO PAULO' = '1',
@@ -45,6 +46,7 @@ export class AgencyBoardRequestComponent implements OnInit {
   selectedCompanies: I_Company_Briefing_Form_Data[] = [];
   selectedOthersCompanies: string[] = [];
 
+  isOtherCompanySelected = false;
   isOtherCompaniesSelected = false;
   showCompanyFields: boolean = false;
 
@@ -54,7 +56,12 @@ export class AgencyBoardRequestComponent implements OnInit {
   // TODO: Adicionar ID para identificação da imagem
   files: { name: string, url: string }[] = [];
 
-  constructor(private fb: FormBuilder, private createRequestService: CreateRequestService, private toastrService: ToastrService) { }
+  constructor(
+    private fb: FormBuilder, 
+    private createRequestService: 
+    CreateRequestService, 
+    private toastrService: ToastrService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.agencyBoardForm = new FormGroup({
@@ -100,6 +107,7 @@ export class AgencyBoardRequestComponent implements OnInit {
     this.files = [];
     this.showCompanyFields = false;
     this.isSingleCompany = true;
+    this.isOtherCompanySelected = false;
     this.isOtherCompaniesSelected = false;
     this.selectedCompanies = [];
     this.selectedOthersCompanies = [];
@@ -121,6 +129,7 @@ export class AgencyBoardRequestComponent implements OnInit {
   }
 
   updateCompanyName(selectionType: number, company: string) {
+    this.isOtherCompanySelected = !this.isOtherCompanySelected;
     if (selectionType === 1) {
       this.companies = [{ name: company, companyMainRoutes: [], companyConnections: [], isCustom: false }];
     } else {
@@ -134,6 +143,7 @@ export class AgencyBoardRequestComponent implements OnInit {
   }
 
   onOtherCompany() {
+    this.isOtherCompanySelected = !this.isOtherCompanySelected;
     if (this.companies.length > 0)
       this.companies = [];
     this.agencyBoardForm.get('otherText')?.setValue('');
@@ -143,6 +153,7 @@ export class AgencyBoardRequestComponent implements OnInit {
     const otherValue = this.agencyBoardForm.get('otherText')?.value;
     this.companies = [];
     this.companies.push({ name: otherValue, companyMainRoutes: [], companyConnections: [], isCustom: true });
+    this.agencyBoardForm.get('otherText')?.reset();
   }
 
   confirmOtherSingleCompany() {
@@ -150,7 +161,9 @@ export class AgencyBoardRequestComponent implements OnInit {
     if (otherCompany && !this.companies.some(c => c.name === otherCompany)) {
       this.companies.push({ name: otherCompany, companyMainRoutes: [], companyConnections: [], isCustom: true });
       this.agencyBoardForm.get('otherText')?.reset();
+      this.isOtherCompanySelected = false;
     }
+    
   }
 
 
@@ -168,8 +181,10 @@ export class AgencyBoardRequestComponent implements OnInit {
       const companyIndex = this.companies.findIndex(company => company.name === 'Outras');
       if (companyIndex >= 0) {
         this.companies[companyIndex].name = otherValue;
+        this.agencyBoardForm.get('othersText')?.reset();
       } else {
         this.companies.push({ name: otherValue, companyMainRoutes: [], companyConnections: [], isCustom: true });
+        this.agencyBoardForm.get('othersText')?.reset();
       }
     }
   }
@@ -361,11 +376,13 @@ export class AgencyBoardRequestComponent implements OnInit {
     );
   }
 
-
-
   submit() {
-    if (this.agencyBoardForm.invalid) {
+    if (this.agencyBoardForm.invalid || !this.validateCompanies()) {
       this.toastrService.error("Erro ao realizar solicitação. Verifique se os campos estão preenchidos corretamente.");
+      this.isButtonDisabled = true;
+      setTimeout(() => {
+        this.isButtonDisabled = false;
+      }, 3000);
       return;
     }
     const requestData = this.prepareSubmit();
@@ -375,7 +392,7 @@ export class AgencyBoardRequestComponent implements OnInit {
           this.toastrService.success("Solicitação realizada com sucesso!");
           setTimeout(() => {
             window.location.reload();
-          }, 2000);
+          },3000);
         },
         error: (error) => {
           this.toastrService.error("Erro ao realizar solicitação.");
@@ -384,6 +401,6 @@ export class AgencyBoardRequestComponent implements OnInit {
     this.isButtonDisabled = true;
     setTimeout(() => {
       this.isButtonDisabled = false;
-    }, 2000);
+    }, 3000);
   }
 }

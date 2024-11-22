@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { TProfile } from '../../../../types/profile-response.type';
+import { I_Employee_View_Data } from '../../../../shared/interfaces/user/view/employee-view';
+import { I_Employee_Form_Data } from '../../../../shared/interfaces/user/form/employee-form';
 import { ProfileService } from '../../services/profile/profile.service';
 import { Router } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-user-data',
@@ -12,72 +14,95 @@ import { Router } from '@angular/router';
 })
 export class EditUserDataComponent {
   editForm!: FormGroup;
-  profileUser!: TProfile;
+  userProfile!: I_Employee_View_Data | null;
+  userProfileEdit!: I_Employee_Form_Data | null;
 
   constructor(
-    private editProfileService: ProfileService,
+    private profileService: ProfileService,
     private toastrService: ToastrService,
-    private router: Router
-  ) {}
+    private router: Router,
+    public dialogRef: MatDialogRef<EditUserDataComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    if (data && data.userProfile) {
+      this.userProfile = data.userProfile;
+    }
+  }
 
   ngOnInit(): void {
-    this.editProfileService.getProfileUser().subscribe((value) => {
-      this.profileUser = value;
-    });
+    this.userProfile = this.profileService.getUserProfile();
+    if (this.userProfile) {
+      this.userProfileEdit = {
+        name: this.userProfile.name || '',
+        lastname: this.userProfile.lastname || '',
+        phoneNumber: this.userProfile.phoneNumber || '',
+        sector: this.userProfile.sector || '',
+        occupation: this.userProfile.occupation || '',
+        agency: this.userProfile.agency || '',
+        avatar: this.userProfile.avatar,
+      };
+    }
 
     this.editForm = new FormGroup({
-      name: new FormControl(this.profileUser.name, [Validators.required]),
-      lastname: new FormControl(this.profileUser.lastname, [Validators.required]),
-      phone: new FormControl(this.profileUser.phone, [
+      name: new FormControl(this.userProfile?.name, [Validators.required]),
+      lastname: new FormControl(this.userProfile?.lastname, [Validators.required]),
+      phone: new FormControl(this.userProfile?.phoneNumber, [
         Validators.required,
-        Validators.pattern(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/),
+        Validators.pattern(/^\(\d{2}\) \d{4,5}-\d{4}$/),
       ]),
-      email: new FormControl(this.profileUser.email, [Validators.required]),
-      sector: new FormControl(this.profileUser.sector, [Validators.required]),
-      occupation: new FormControl(this.profileUser.occupation, [Validators.required]),
-      nop: new FormControl(this.profileUser.agency, [Validators.required]),
+      email: new FormControl(this.userProfile?.user.email, [Validators.required, Validators.email]),
+      sector: new FormControl(this.userProfile?.sector, [Validators.required]),
+      occupation: new FormControl(this.userProfile?.occupation, [Validators.required]),
+      nop: new FormControl(this.userProfile?.agency, [Validators.required]),
     });
   }
 
-  get name() {
-    return this.editForm.get('name')!;
-  }
-  get lastname() {
-    return this.editForm.get('lastname')!;
-  }
-  get phone() {
-    return this.editForm.get('phone')!;
-  }
-  get sector() {
-    return this.editForm.get('sector')!;
-  }
-  get occupation() {
-    return this.editForm.get('occupation')!;
-  }
-  get nop() {
-    return this.editForm.get('nop')!;
-  }
+  get name() { return this.editForm.get('name')!; }
+  get lastname() { return this.editForm.get('lastname')!; }
+  get phone() { return this.editForm.get('phone')!; }
+  get sector() { return this.editForm.get('sector')!; }
+  get occupation() { return this.editForm.get('occupation')!; }
+  get nop() { return this.editForm.get('nop')!; }
 
-  submit(){
-    if(this.editForm.invalid){
-      this.toastrService.error("Preencha todos os campos!")
+  submit() {
+    if (this.editForm.invalid) {
+      this.toastrService.error("Preencha todos os campos!");
       return;
     }
-    this.profileUser.name = this.name.value;
-    this.profileUser.lastname = this.lastname.value;
-    this.profileUser.phone = this.phone.value;
-    this.profileUser.sector = this.sector.value;
-    this.profileUser.occupation = this.occupation.value;
-    this.profileUser.agency = this.nop.value;
-    this.editProfileService.updateProfileUser(this.profileUser).subscribe((response) => {
-      console.log(response);
-      this.toastrService.success("Dados atualizados com sucesso!");
-      this.router.navigate(['/perfil']);
-    });
+
+    this.userProfileEdit!.name = this.name.value;
+    this.userProfileEdit!.lastname = this.lastname.value;
+    this.userProfileEdit!.phoneNumber = this.phone.value;
+    this.userProfileEdit!.sector = this.sector.value;
+    this.userProfileEdit!.occupation = this.occupation.value;
+    this.userProfileEdit!.agency = this.nop.value;
+
+    this.profileService.updateProfileUser(this.userProfileEdit!, this.userProfile?.id).subscribe(
+      (response) => {
+        this.toastrService.success("Dados atualizados com sucesso!");
+
+        this.profileService.getUserProfileFromServer(this.userProfile?.id).subscribe(
+          (updatedProfile) => {
+            sessionStorage.setItem('userProfile', JSON.stringify(updatedProfile));
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
+          },
+          (error) => {
+            this.toastrService.error("Erro ao atualizar o perfil, por favor tente novamente.");
+          }
+        );
+
+        this.dialogRef.close(this.userProfile);
+      },
+      (error) => {
+        this.toastrService.error("Erro ao atualizar os dados, por favor tente novamente.");
+      }
+    );
   }
 
-  cancel(){
-    this.toastrService.warning('Retornando...');
-    this.router.navigate(['/perfil']);
+
+  cancel() {
+    this.dialogRef.close(this.userProfile);
   }
 }

@@ -5,7 +5,7 @@
   font-family: Inter, sans-serif !important;
 }
 
-:root{
+:root {
   --primary-color: #297373;
 }
 
@@ -40,18 +40,22 @@
   border-radius: 50%;
 }
 
-.in-radio:checked + .lb::before {
+.in-radio:checked+.lb::before {
   height: 1em;
   width: 1em;
   border: 0.3em solid #ffffff;
   background-color: #029982;
 }
 
-.in-radio:checked + .lb {
+.in-radio:checked+.lb {
   background-color: #029982;
   color: #ffffff;
 }
 
+.mdc-dialog--open .mat-mdc-dialog-surface,
+.mdc-dialog--closing .mat-mdc-dialog-surface {
+  overflow: hidden !important;
+}
 
 .lb-reject {
   color: #db6b6b;
@@ -62,10 +66,25 @@
   border: 3px solid #db6b6b;
 }
 
-.in-radio-reject:checked + .lb-reject::before {
+.in-radio-reject:checked+.lb-reject::before {
   background-color: #db6b6b;
 }
 
-.in-radio-reject:checked + .lb-reject {
+.in-radio-reject:checked+.lb-reject {
   background-color: #db6b6b;
+}
+
+@media (min-width: 768px) and (max-width: 1280px) {
+  * {
+    font-size: 13px !important;
+  }
+  
+}
+
+@media (max-width: 1280px) {
+  .mdc-dialog--open .mat-mdc-dialog-surface,
+  .mdc-dialog--closing .mat-mdc-dialog-surface {
+    width: 600px !important;
+    height: 800px !important;
+  }
 }
