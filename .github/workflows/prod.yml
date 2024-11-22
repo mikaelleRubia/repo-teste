@@ -18,10 +18,10 @@ jobs:
 
             - name: Install dependencies
               run: npm install
-
             - name: Build Angular app
               run: npm run build
-
+            - name: Login Deploy Hub
+              run: docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
             - name: Build Docker image
               run: sudo docker build -t mikaelle2rubia/frontend-grupo-brasileiro .
 
