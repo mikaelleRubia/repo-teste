@@ -2,7 +2,7 @@ name: Build and Deploy Angular App
 
 on:
     push:
-        branches: [deploy-cepedi-develop]
+        branches: [deploy-develop-cepedi]
 
 jobs:
     build:
