@@ -10,7 +10,7 @@ import { I_Agency_Board_Data } from '../../../shared/interfaces/briefing/agency-
   providedIn: 'root'
 })
 export class CreateRequestService {
-  private readonly apiUrl = 'http://localhost:8080/api/v1';
+  private readonly apiUrl = 'http://localhost:8081/api/v1';
 
   constructor(private http: HttpClient) { }
   submitAgencyBoardRequest(
