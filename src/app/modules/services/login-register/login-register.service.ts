@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class LoginRegisterService {
-  private readonly prefix = 'http://localhost:8081/api/v1/auth';
+  private readonly prefix = 'http://54.200.23.253:8081/api/v1/auth';
 
   constructor(private router: Router, private httpClient: HttpClient) { }
 

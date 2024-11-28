@@ -15,7 +15,7 @@ import { I_Approve_Request } from '../../../shared/interfaces/project/form/appro
   providedIn: 'root',
 })
 export class RequestDetailsService {
-  private baseUrl = 'http://localhost:8081/api/v1';
+  private baseUrl = 'http://54.200.23.253:8081/api/v1';
 
   constructor(private http: HttpClient) {}
 

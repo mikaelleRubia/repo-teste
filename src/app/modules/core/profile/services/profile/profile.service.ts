@@ -9,8 +9,8 @@ import { I_Employee_Form_Data } from '../../../../shared/interfaces/user/form/em
   providedIn: 'root',
 })
 export class ProfileService {
-  private readonly apiUrl = 'http://localhost:8081/api/v1/users';
-  private readonly apiEditUrl = 'http://localhost:8081/api/v1/employees';
+  private readonly apiUrl = 'http://54.200.23.253:8081/api/v1/users';
+  private readonly apiEditUrl = 'http://54.200.23.253:8081/api/v1/employees';
 
   constructor(private http: HttpClient) { }
 

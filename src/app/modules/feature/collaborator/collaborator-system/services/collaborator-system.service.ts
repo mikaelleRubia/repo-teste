@@ -15,7 +15,7 @@ interface Collaborator {
   providedIn: 'root'
 })
 export class CollaboratorSystemService {
-  private apiUrl = 'http://localhost:8081/collaborators';
+  private apiUrl = 'http://54.200.23.253:8081/collaborators';
 
   constructor(private http: HttpClient) {}
 

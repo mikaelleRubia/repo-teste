@@ -8,7 +8,7 @@ import { CardsAttributes } from '../interfaces/cards-attributes';
 })
 export class CheckRequestsService {
 
-  private apiUrl = 'http://localhost:8081/api/v1/projects';
+  private apiUrl = 'http://54.200.23.253:8081/api/v1/projects';
 
   constructor(private http: HttpClient) { }
 
