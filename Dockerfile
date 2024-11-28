@@ -9,7 +9,7 @@ FROM nginx:alpine
 COPY --from=build /app/dist/sistema-grupo-brasileiro/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY mime.types /etc/nginx/mime.types
-EXPOSE 4000
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 
